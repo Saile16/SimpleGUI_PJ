@@ -1,12 +1,12 @@
 # tenemos que instalar mysql connector
 import mysql.connector
 # esta coneccion esta hecha con una db del profesor del curso
-con = mysql.connector.connect(
-    user="ardit700_student",
-    password="ardit700_student",
-    host="108.167.140.122",
-    database="ardit700_pm1database"
-)
+# con = mysql.connector.connect(
+#     user="ardit700_student",
+#     password="ardit700_student",
+#     host="108.167.140.122",
+#     database="ardit700_pm1database"
+# )
 # llamaos al cursor
 cursor = con.cursor()
 word = input("Enter a word: ")
