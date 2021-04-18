@@ -1,0 +1,5 @@
+build
+dist
+tip.txt
+__pycache__
+frontend.spec
