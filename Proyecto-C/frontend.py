@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from PIL import Image
+import os
 import backend
 
 
@@ -47,7 +48,6 @@ def get_selected_row(event):
             fibra = 0
 
         # print(lista)
-        print(nombre, calorias, carbohidrato, grasas, fibra)
 
         e1.delete(0, END)
         e1.insert(END, nombre)
@@ -91,7 +91,7 @@ def search_command():
 
 
 def calcular():
-    print(type(calorias_text.get()))
+    # print(type(calorias_text.get()))
     calorias = float(calorias_text.get())
     proteinas = float(proteinas_text.get())
     carbohidratos = float(carbohidrato_text.get())
@@ -148,7 +148,7 @@ def sumar_tabla2():
         carbohidratos_total += float(tabla2.item(i, 'values')[3])
         grasas_total += float(tabla2.item(i, 'values')[4])
         fibra_total += float(tabla2.item(i, 'values')[5])
-        print(calorias_total)
+        # print(calorias_total)
     # nuevo_cal_valor = calorias_total
     l30.config(
         text=f"DIETA\nCal: {round(calorias_total,2)} - Prot: {round(proteinas_total,2)} - Carb: {round(carbohidratos_total,2)} - Grasas: {round(grasas_total,2)} - Fib: {round(fibra_total,2)}")
@@ -160,23 +160,56 @@ def eliminar_comida():
     sumar_tabla2()
 
 
+def limpiar_dieta():
+    with open("fruits.txt", "w+") as myfile:
+        registro = tabla2.get_children()
+        for j in registro:
+            tabla2.delete(j)
+            myfile.write("")
+        sumar_tabla2()
+
+
+def escribir_block():
+    nombre = ""
+    calorias_total = 0
+    proteinas_total = 0
+    carbohidratos_total = 0
+    grasas_total = 0
+    fibra_total = 0
+    child = tabla2.get_children()
+
+    with open("Dieta.txt", "w+") as myfile:
+        for i in child:
+            c = 0
+            nombre = str(tabla2.item(i, 'values')[0])
+            calorias_total = float(tabla2.item(i, 'values')[1])
+            proteinas_total = float(tabla2.item(i, 'values')[2])
+            carbohidratos_total = float(tabla2.item(i, 'values')[3])
+            grasas_total = float(tabla2.item(i, 'values')[4])
+            fibra_total = float(tabla2.item(i, 'values')[5])
+            myfile.write(
+                f"*{nombre}-{calorias_total}-{proteinas_total}-{carbohidratos_total}-{grasas_total}-{fibra_total}\r\n")
+            # myfile.write(f"*{nombre}-Cal:{calorias_total}kcal-Prot:{proteinas_total}-Carb:{carbohidratos_total}-Grasas:{grasas_total}-Fib:{fibra_total}\r\n")
+    os.startfile("Dieta.txt")
+
+
 window = Tk()
 
-window.wm_title("App")
+window.wm_title("Titang-App")
 window.geometry("1700x600")
-img = Image.open(r"logo.jpg")  # your jpeg image path
-img.save(r"Icon.ico")
+# img = Image.open(r"logo.jpg")  # your jpeg image path
+# img.save(r"Icon.ico")
 
-imagen = PhotoImage(file="logo.png")
-imagen = imagen.subsample(2)
+imagen = PhotoImage(file="titang.png")
+imagen = imagen.subsample(3)
 fondo = Label(window, image=imagen).grid(
-    row=0, column=0, rowspan=2, columnspan=1)
+    row=0, column=0, columnspan=1)
 
 # Aqui ira todo del frame1
 frame1 = Frame(window)
 
 frame1.grid(row=0, column=1, columnspan=2,
-            rowspan=2,  ipadx=25, ipady=15)
+            rowspan=2,  ipadx=25, ipady=15, pady=42)
 
 l1 = Label(frame1, text="Alimento")
 l1.grid(row=0, column=1, ipadx=2, ipady=6)
@@ -230,7 +263,7 @@ b2.grid(row=2, column=3, rowspan=2)
 # imagen=row=0, column=0, rowspan=2,columspan=1)
 
 frame2 = Frame(window)
-frame2.grid(row=3, column=0, columnspan=2, rowspan=2)
+frame2.grid(row=3, column=0, columnspan=2, rowspan=2, pady=0)
 l5 = Label(frame2, text="Resultado", font=(100))
 l5.grid(row=0, column=0, columnspan=2)
 
@@ -340,4 +373,10 @@ tabla2.heading("#4", text="Carb", anchor=CENTER)
 tabla2.heading("#5", text="Grasas", anchor=CENTER)
 tabla2.heading("#6", text="Fib", anchor=CENTER)
 tabla2.bind("<ButtonRelease-1>", get_selected_row2)
+b1_f2 = Button(window, text="Limpiar", width=10,
+               height=2, command=limpiar_dieta)
+b1_f2.place(x=1598, y=480)
+b2_f2 = Button(window, text="Enviar Block", width=10,
+               height=2, command=escribir_block)
+b2_f2.place(x=1598, y=380)
 window.mainloop()
